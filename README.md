@@ -16,6 +16,7 @@
 
 ## Build and run
 - Log in to PostgreSQL and create schema objects `postgres=# \i ./schema.sql`
+- Set your database connection properties [here](https://github.com/akardapolov/chat/blob/master/src/main/resources/hibernate.cfg.xml)
 - Run `mvn package` from IntelliJ IDEA
 - Start application: target/chat-1.0-SNAPSHOT-jar-with-dependencies.jar
 
