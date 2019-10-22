@@ -1,41 +1,71 @@
 package gui;
 
+import data.model.Users;
+import data.service.UserService;
 import gui.module.Login;
 import gui.module.MessageList;
 import gui.module.Send;
 import gui.module.UserList;
 import lombok.extern.slf4j.Slf4j;
+import state.SessionState;
 
 import javax.inject.Inject;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 @Slf4j
 public class MainWindow {
     private final BasicFrame jFrame;
     private final Login loginToolBar;
     private final UserList userList;
-
-    private JSplitPane splitPaneMessageAndSend;
     private final MessageList messageList;
     private final Send send;
+
+    private UserService userService;
+    private SessionState sessionState;
+
+    private JSplitPane splitPaneMessageAndSend;
 
     @Inject
     public MainWindow(BasicFrame jFrame,
                       Login loginToolBar,
                       UserList userList,
                       MessageList messageList,
-                      Send send) {
+                      Send send,
+                      SessionState sessionState,
+                      UserService userService) {
         this.jFrame = jFrame;
         this.loginToolBar = loginToolBar;
         this.userList = userList;
         this.messageList = messageList;
         this.send = send;
 
+        this.userService = userService;
+        this.sessionState = sessionState;
+
         initializeMessageSend();
         composeAll();
 
         setVisibleAndSetSize();
+
+        actionOnShutdownApp();
+    }
+
+    private void actionOnShutdownApp() {
+        jFrame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e)
+            {
+                Users users = new Users();
+                users.setUsername(sessionState.getCurrentUsername());
+                users.setOnline("No");
+
+                userService.persist(users);
+                System.exit(0);
+            }
+        });
     }
 
     private void initializeMessageSend(){

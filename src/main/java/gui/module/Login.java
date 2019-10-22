@@ -52,7 +52,6 @@ public class Login extends JToolBar {
         ProgressBarUtil.runProgressDialog(()
                 -> {
             try {
-                Thread.sleep(100);
 
                 Users users = new Users();
                 users.setUsername(usernameField.getText());

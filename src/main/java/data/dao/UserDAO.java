@@ -31,7 +31,7 @@ public class UserDAO implements UserDAOInterface<Users, String> {
 
     @Override
     public void persist(Users user) {
-        dbSessionInterface.getCurrentSession().save(user);
+        dbSessionInterface.getCurrentSession().saveOrUpdate(user);
     }
 
 }

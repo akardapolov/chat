@@ -12,7 +12,7 @@ public class SessionState {
     @Getter @Setter
     private String currentUsername = "Guest";
     @Getter @Setter
-    private String sendToUsername = "";
+    private String sendToUsername = ""; // Current companion
 
     @Getter
     private HashMap<String, Long> lastMessageByUserOnTheClientSide = new HashMap<>();

@@ -50,7 +50,8 @@ public class UserList extends JPanel{
     public void setReadyToChat(){
         // load user list and start chatting
         userService.findAll().stream()
-                .filter(k -> !k.getUsername().equalsIgnoreCase(sessionState.getCurrentUsername()))
+                .filter(k -> !k.getUsername().equalsIgnoreCase(sessionState.getCurrentUsername())) // Exclude the current user
+                .filter(n -> n.getOnline().equalsIgnoreCase("Yes")) // Online users
                 .forEach(e -> model.addRow(new Object[] {e.getUsername()}));
 
         jScrollPane.setEnabled(true);
