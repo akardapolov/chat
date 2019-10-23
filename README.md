@@ -6,6 +6,7 @@
 - ORM: Hibernate
 - GUI: Java Swing, Swingx
 - DI: Dagger 2
+- Pub/sub: pgjdbc-ng
 - Tests: JUnit/H2
 
 ## Table of contents
