@@ -8,6 +8,7 @@ import gui.module.Send;
 import gui.module.UserList;
 import lombok.extern.slf4j.Slf4j;
 import state.SessionState;
+import util.Labels;
 
 import javax.inject.Inject;
 import javax.swing.*;
@@ -58,11 +59,14 @@ public class MainWindow {
             @Override
             public void windowClosing(WindowEvent e)
             {
-                Users users = new Users();
-                users.setUsername(sessionState.getCurrentUsername());
-                users.setOnline("No");
+                if (!sessionState.getCurrentUsername().equalsIgnoreCase(Labels.getLabel("username.guest"))){
+                    Users users = new Users();
+                    users.setUsername(sessionState.getCurrentUsername());
+                    users.setOnline("No");
 
-                userService.persist(users);
+                    userService.persist(users);
+                }
+
                 System.exit(0);
             }
         });

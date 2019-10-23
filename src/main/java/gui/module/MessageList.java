@@ -2,6 +2,8 @@ package gui.module;
 
 import data.service.MessageService;
 import gui.BasicFrame;
+import pubsub.AppCallback;
+import pubsub.Subscriber;
 import state.SessionState;
 
 import javax.inject.Inject;
@@ -10,10 +12,11 @@ import javax.swing.*;
 import java.awt.*;
 
 @Singleton
-public class MessageList extends JPanel {
+public class MessageList extends JPanel implements AppCallback {
     private BasicFrame jFrame;
     private SessionState sessionState;
     private MessageService messageService;
+    private Subscriber subscriber;
 
     private JTextArea output;
     private JScrollPane jScrollPane;
@@ -21,10 +24,13 @@ public class MessageList extends JPanel {
     @Inject
     public MessageList(BasicFrame jFrame,
                        SessionState sessionState,
-                       MessageService messageService) {
+                       MessageService messageService,
+                       Subscriber subscriber) {
         this.jFrame = jFrame;
         this.sessionState = sessionState;
         this.messageService = messageService;
+        this.subscriber = subscriber;
+        this.subscriber.addObjectForCallback(this);
 
         this.setLayout(new BorderLayout());
         this.initialize();
@@ -53,9 +59,16 @@ public class MessageList extends JPanel {
                     sessionState.getLastMessageByUserOnTheClientSide()
                             .put(receiver, e.getCreated_time());
                 });
+
+        output.setCaretPosition(output.getDocument().getLength());
     }
 
     public void clearMessageList(){
         output.setText("");
+    }
+
+    @Override
+    public void fireAction() {
+        loadMessageList(sessionState.getSendToUsername());
     }
 }

@@ -3,6 +3,7 @@ package gui.module;
 import data.model.Users;
 import data.service.UserService;
 import gui.BasicFrame;
+import pubsub.Subscriber;
 import state.SessionState;
 import util.Labels;
 import util.ProgressBarUtil;
@@ -10,6 +11,8 @@ import util.ProgressBarUtil;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 @Singleton
 public class Login extends JToolBar {
@@ -17,6 +20,7 @@ public class Login extends JToolBar {
     private SessionState sessionState;
     private UserList userList;
     private UserService userService;
+    private Subscriber subscriber;
 
     private JLabel loginAsUser;
     private JTextField usernameField;
@@ -26,11 +30,13 @@ public class Login extends JToolBar {
     public Login(BasicFrame jFrame,
                  SessionState sessionState,
                  UserList userList,
-                 UserService userService) {
+                 UserService userService,
+                 Subscriber subscriber) {
         this.jFrame = jFrame;
         this.sessionState = sessionState;
         this.userList = userList;
         this.userService = userService;
+        this.subscriber = subscriber;
 
         this.initialize();
     }
@@ -46,6 +52,8 @@ public class Login extends JToolBar {
 
         // Handle connect to system and ready to start chatting
         this.connectButton.addActionListener(e -> connectToSystem());
+        // Handle enter in input string and doClick on connectButton
+        this.sendMessageKeyListener();
     }
 
     private void connectToSystem(){
@@ -57,25 +65,37 @@ public class Login extends JToolBar {
                 users.setUsername(usernameField.getText());
                 users.setOnline("Yes");
 
-                Users userNameFromDB = this.userService.findById(users.getUsername());
-
-                if (userNameFromDB == null) {
-                    this.userService.persist(users);
-                } else {
-                    if (!userNameFromDB.getUsername().equalsIgnoreCase(users.getUsername())){ // save username if not exist
-                        this.userService.persist(users);
-                    }
-                }
+                this.userService.persist(users);
 
                 sessionState.setCurrentUsername(usernameField.getText());
 
                 userList.setReadyToChat();
                 usernameField.setEnabled(false);
                 connectButton.setEnabled(false);
+
+                subscriber.initialize();
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(jFrame, "Error while connecting to server: " + e.getMessage());
             }
         }, jFrame, Labels.getLabel("login.connect.message"));
+    }
+
+
+    private void sendMessageKeyListener(){
+        usernameField.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) { }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(e.getKeyCode() == KeyEvent.VK_ENTER){
+                    connectButton.doClick();
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) { }
+        });
     }
 
 }
