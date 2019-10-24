@@ -9,6 +9,7 @@ import gui.module.UserList;
 import lombok.extern.slf4j.Slf4j;
 import state.SessionState;
 import util.Labels;
+import util.StackTraceUtil;
 
 import javax.inject.Inject;
 import javax.swing.*;
@@ -64,7 +65,12 @@ public class MainWindow {
                     users.setUsername(sessionState.getCurrentUsername());
                     users.setOnline("No");
 
-                    userService.persist(users);
+                    try {
+                        userService.persist(users);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(jFrame, StackTraceUtil.getCustomStackTrace(ex));
+                    }
                 }
 
                 System.exit(0);

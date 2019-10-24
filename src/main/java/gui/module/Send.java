@@ -79,9 +79,6 @@ public class Send extends JPanel {
                         newMessage.setTo_user(sessionState.getSendToUsername());
 
                         messageService.persist(newMessage);
-
-                        /*sessionState.getLastMessageByUserOnTheClientSide()
-                                .put(sessionState.getSendToUsername(), created_time);*/
                     }
 
                     // clear text

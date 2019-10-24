@@ -51,6 +51,8 @@ public class MessageList extends JPanel implements AppCallback {
 
     void loadAllMessages(String receiver){
         // Load all messages from the server side
+        sessionState.getLastMessageByUserOnTheClientSide().putIfAbsent(receiver, 0L);
+
         output.setText("");
         messageService
                 .findAllBySendAndRec(sessionState.getCurrentUsername(), receiver)
@@ -64,6 +66,8 @@ public class MessageList extends JPanel implements AppCallback {
 
     void loadMessagesMoreThanCreatedTime(Long created_time, String receiver){
         // Load messages more than created_time from the server side
+        sessionState.getLastMessageByUserOnTheClientSide().putIfAbsent(receiver, 0L);
+
         messageService
                 .findAllMoreCreatedTimeSendRec(created_time, sessionState.getCurrentUsername(), receiver)
                 .stream()
@@ -86,10 +90,8 @@ public class MessageList extends JPanel implements AppCallback {
 
     @Override
     public void fireAction() {
-        loadAllMessages(sessionState.getSendToUsername());
-
-        /*loadMessagesMoreThanCreatedTime(
+        loadMessagesMoreThanCreatedTime(
                 sessionState.getLastMessageByUserOnTheClientSide().get(sessionState.getSendToUsername()),
-                sessionState.getSendToUsername());*/
+                sessionState.getSendToUsername());
     }
 }
