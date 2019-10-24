@@ -91,7 +91,7 @@ public class UserList extends JPanel{
                     String receiver = tableUsersList.getModel()
                             .getValueAt(tableUsersList.getSelectedRow(), 0).toString();
 
-                    messageList.loadMessageList(receiver);
+                    messageList.loadAllMessages(receiver);
                     sessionState.setSendToUsername(receiver);
                     send.setReadyToChat();
 

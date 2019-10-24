@@ -71,19 +71,31 @@ public class Send extends JPanel {
                     } else {
                         Messages newMessage = new Messages();
 
-                        newMessage.setCreated_time(Instant.now().toEpochMilli());
+                        Long created_time = Instant.now().toEpochMilli();
+
+                        newMessage.setCreated_time(created_time);
                         newMessage.setMessage(output.getText());
                         newMessage.setFrom_user(sessionState.getCurrentUsername());
                         newMessage.setTo_user(sessionState.getSendToUsername());
 
                         messageService.persist(newMessage);
+
+                        /*sessionState.getLastMessageByUserOnTheClientSide()
+                                .put(sessionState.getSendToUsername(), created_time);*/
                     }
 
                     // clear text
                     output.setText("");
 
-                    // reload Message list
-                    messageList.loadMessageList(sessionState.getSendToUsername());
+                    // reload all messages
+                    //messageList.loadAllMessages(sessionState.getSendToUsername());
+
+                    /*messageList
+                            .loadMessagesMoreThanCreatedTime(
+                                    sessionState.getLastMessageByUserOnTheClientSide()
+                                            .get(sessionState.getSendToUsername()),
+                                    sessionState.getSendToUsername());*/
+
                 }
             }
 

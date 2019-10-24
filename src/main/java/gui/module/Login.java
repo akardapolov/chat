@@ -7,6 +7,7 @@ import pubsub.Subscriber;
 import state.SessionState;
 import util.Labels;
 import util.ProgressBarUtil;
+import util.StackTraceUtil;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -75,7 +76,8 @@ public class Login extends JToolBar {
 
                 subscriber.initialize();
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(jFrame, "Error while connecting to server: " + e.getMessage());
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(jFrame, StackTraceUtil.getCustomStackTrace(e));
             }
         }, jFrame, Labels.getLabel("login.connect.message"));
     }

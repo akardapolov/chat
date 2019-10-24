@@ -26,7 +26,7 @@ public class MessageService {
         dbSession.closeCurrentSessionwithTransaction();
     }
 
-    public Messages findById(Integer created_time) {
+    public Messages findById(Long created_time) {
         dbSession.openCurrentSession();
         Messages messages = (Messages) messageDAOInterface.findById(created_time);
         dbSession.closeCurrentSession();
@@ -36,6 +36,14 @@ public class MessageService {
     public List<Messages> findAllBySendAndRec(String sender, String receiver) {
         dbSession.openCurrentSession();
         List<Messages> messages = (List<Messages>) messageDAOInterface.findAllBySendAndRec(sender, receiver);
+        dbSession.closeCurrentSession();
+        return messages;
+    }
+
+    public List<Messages> findAllMoreCreatedTimeSendRec(Long created_time, String sender, String receiver) {
+        dbSession.openCurrentSession();
+        List<Messages> messages = (List<Messages>)
+                messageDAOInterface.findAllMoreCreatedTimeSendRec(created_time, sender, receiver);
         dbSession.closeCurrentSession();
         return messages;
     }

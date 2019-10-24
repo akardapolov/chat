@@ -17,7 +17,9 @@ public class DbSession implements DbSessionInterface {
     private Transaction currentTransaction;
 
     @Inject
-    public DbSession() {}
+    public DbSession() {
+        currentSession = getSessionFactory().openSession();
+    }
 
     @Override
     public Session openCurrentSession() {
@@ -40,7 +42,7 @@ public class DbSession implements DbSessionInterface {
     @Override
     public void closeCurrentSessionwithTransaction() {
         currentTransaction.commit();
-        currentSession.close();
+        //currentSession.close();
     }
 
     @Override
@@ -71,8 +73,7 @@ public class DbSession implements DbSessionInterface {
 
         StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties());
-        SessionFactory sessionFactory = configuration.buildSessionFactory(builder.build());
 
-        return sessionFactory;
+        return configuration.buildSessionFactory(builder.build());
     }
 }

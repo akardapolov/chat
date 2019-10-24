@@ -27,6 +27,11 @@ public class MessageDAOTest {
     private Messages messages2;
     private Messages messages3;
 
+    private Long dateTime0;
+    private Long dateTime1;
+    private Long dateTime2;
+    private Long dateTime3;
+
     private List<Messages> messageListMain = new ArrayList<>();
 
     @Rule
@@ -48,10 +53,15 @@ public class MessageDAOTest {
         users2 = createUsers("Test2", "Yes");
         users3 = createUsers("Test3", "Yes");
 
-        messages0 = createMessages(Instant.now().toEpochMilli(), "Hello!", "Test0", "Test1");
-        messages1 = createMessages(Instant.now().toEpochMilli()+1, "Hi!", "Test1", "Test0");
-        messages2 = createMessages(Instant.now().toEpochMilli()+2, "Nice!", "Test2", "Test3");
-        messages3 = createMessages(Instant.now().toEpochMilli()+3, "Ok", "Test3", "Test0");
+        dateTime0 = Instant.now().toEpochMilli();
+        dateTime1 = dateTime0 + 1;
+        dateTime2 = dateTime0 + 2;
+        dateTime3 = dateTime0 + 3;
+
+        messages0 = createMessages(dateTime0, "Hello!", "Test0", "Test1");
+        messages1 = createMessages(dateTime1, "Hi!", "Test1", "Test0");
+        messages2 = createMessages(dateTime2, "Nice!", "Test2", "Test3");
+        messages3 = createMessages(dateTime3, "Ok", "Test3", "Test0");
 
         session.save(users0);
         session.save(users1);
@@ -95,6 +105,23 @@ public class MessageDAOTest {
         }
 
         assertEquals(2, i);
+    }
+
+    @Test
+    public void findAllMoreDateTimeCreated() {
+        int i = 0;
+
+        String sender = "Test0";
+        String receiver = "Test1";
+
+        // 1 message entity expected
+        for (Messages original : messageDAO.findAllMoreCreatedTimeSendRec(dateTime0, sender, receiver)) {
+            if (messageListMain.contains(original)) {
+                i++;
+            }
+        }
+
+        assertEquals(1, i);
     }
 
     @Test
