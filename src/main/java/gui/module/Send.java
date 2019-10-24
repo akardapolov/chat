@@ -83,16 +83,6 @@ public class Send extends JPanel {
 
                     // clear text
                     output.setText("");
-
-                    // reload all messages
-                    //messageList.loadAllMessages(sessionState.getSendToUsername());
-
-                    /*messageList
-                            .loadMessagesMoreThanCreatedTime(
-                                    sessionState.getLastMessageByUserOnTheClientSide()
-                                            .get(sessionState.getSendToUsername()),
-                                    sessionState.getSendToUsername());*/
-
                 }
             }
 
